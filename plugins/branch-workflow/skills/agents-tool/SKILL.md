@@ -65,5 +65,9 @@ reflects what you're doing.
 
 - Detects jj vs. plain git automatically; behavior differs slightly (jj can `describe`
   directly, git stages the skeleton into `COMMIT_EDITMSG` for the next `git commit`).
-- Has special-cased, lighter-weight handling for dotfiles/chezmoi-style repos (detected
-  via `.chezmoiignore`, `.chezmoi.toml.tmpl`, or well-known dotfiles paths).
+- Uses a lighter-weight WIP flow (just a `WIP:` prefix check, no Scope/Out-of-Scope/TODOs
+  template) for repos that don't really have discrete feature branches. Dotfiles/chezmoi
+  repos get this automatically (detected via `.chezmoiignore`, `.chezmoi.toml.tmpl`, or
+  well-known dotfiles paths). Any other repo can opt in the same way by adding a
+  `.agents-nobranchy` marker file at the repo root — presence is what matters, content is
+  currently unread (reserved for future config, e.g. a reason string).

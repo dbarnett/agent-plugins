@@ -117,6 +117,14 @@ REFRESH_BY=$(date_plus_days "$REFRESH_DAYS")
 
 printf "${BOLD}🔧 Checking for AGENTS files${RESET}\n\n"
 
+# HAZARD: every repo-detection/marker check below (.git, .jj, .chezmoiignore,
+# .agents-nobranchy, AGENTS.local.md, etc) is CWD-relative with no root-finding logic.
+# Run this from a subdirectory of a repo and it silently falls into the "not in a repo"
+# branch instead of finding the real root. Planned fix: infer the repo root once (`git
+# rev-parse --show-toplevel` / `jj root`) and check paths there -- these markers are
+# meant to be whole-repo, not nestable, so resolving one root path is the right model
+# here, not walking up directories (which would also need guards against escaping the
+# repo entirely).
 # Check if we're in a repository
 if [ ! -d .git ] && [ ! -d .jj ]; then
     step3=""
@@ -137,12 +145,21 @@ Otherwise, nothing special needed here. Carry on!
     exit 0
 fi
 
-# Detect dotfiles/chezmoi repositories
-IS_DOTFILES=false
-if [ -f .chezmoiignore ] || [ -f .chezmoi.toml.tmpl ] || \
-   [ "$PWD" = "$HOME/.local/share/chezmoi" ] || [ "$PWD" = "$HOME/.dotfiles" ]; then
-    IS_DOTFILES=true
-    verbose "${BLUE}ℹ️  Dotfiles repository detected - using specialized handling${RESET}
+# Detect repos that want the lightweight WIP flow (just a WIP: prefix check, no
+# Scope/Out-of-Scope/TODOs template): dotfiles/chezmoi repos get it automatically,
+# any other repo can opt in by adding a .agents-nobranchy marker file (presence is what
+# matters -- content is currently unread, reserved for future config, e.g. a reason string).
+# CWD-relative like everything else here -- see HAZARD comment above.
+IS_LIGHTWEIGHT_WIP=false
+if [ -f .agents-nobranchy ]; then
+    IS_LIGHTWEIGHT_WIP=true
+    verbose "${BLUE}ℹ️  .agents-nobranchy present - using lightweight WIP handling${RESET}
+
+"
+elif [ -f .chezmoiignore ] || [ -f .chezmoi.toml.tmpl ] || \
+     [ "$PWD" = "$HOME/.local/share/chezmoi" ] || [ "$PWD" = "$HOME/.dotfiles" ]; then
+    IS_LIGHTWEIGHT_WIP=true
+    verbose "${BLUE}ℹ️  Dotfiles repository detected - using lightweight WIP handling${RESET}
 
 "
 fi
@@ -401,7 +418,7 @@ EOF
         fi
 
         # Suggest when to use --task mode (non-dotfiles only, and not already in task mode)
-        if [ "$IS_DOTFILES" = false ] && [ "$TASK_MODE" = false ]; then
+        if [ "$IS_LIGHTWEIGHT_WIP" = false ] && [ "$TASK_MODE" = false ]; then
             show_task_mode_suggestion
             printf "${GREEN}Done!${RESET} ${BLUE}(Script is idempotent - run as frequently as needed)${RESET}\n"
         fi
@@ -480,7 +497,7 @@ EOF
     fi
 
     # Suggest when to use --task mode (same function as refresh mode, non-dotfiles only, not already in task mode)
-    if [ "$IS_DOTFILES" = false ] && [ "$TASK_MODE" = false ]; then
+    if [ "$IS_LIGHTWEIGHT_WIP" = false ] && [ "$TASK_MODE" = false ]; then
         printf "\n"
         show_task_mode_suggestion
         printf "${GREEN}Done!${RESET} ${BLUE}(Script is idempotent - run as frequently as needed)${RESET}\n"
@@ -518,7 +535,7 @@ read_editmsg() {
 }
 
 run_task_mode() {
-    if [ "$IS_DOTFILES" = true ]; then
+    if [ "$IS_LIGHTWEIGHT_WIP" = true ]; then
         if ! command -v jj >/dev/null 2>&1; then
             printf "${YELLOW}Note: jj not available, skipping change validation${RESET}\n\n"
             return
