@@ -4,6 +4,8 @@ import "package://github.com/jdx/hk/releases/download/v1.48.0/hk@1.48.0#/Builtin
 local linters = new Mapping<String, Step> {
     ["shellcheck"] = Builtins.shellcheck
     ["check_executables_have_shebangs"] = Builtins.check_executables_have_shebangs
+    // Scans changed files for secrets/keys before they can land in this public repo.
+    ["gitleaks"] = Builtins.gitleaks
 
     // Bundled plugin scripts have no .sh extension (run via ${CLAUDE_PLUGIN_ROOT}), so
     // shellcheck them explicitly rather than relying on the builtin's *.sh/*.bash glob.
