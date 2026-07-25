@@ -1,0 +1,11 @@
+# OS/editor cruft
+.DS_Store
+*.swp
+*~
+
+# Local Claude Code / Cursor settings (created when testing plugins from this repo)
+.claude/settings.local.json
+.cursor/
+
+# agents-tool creates this locally when run in a project (this one included)
+AGENTS.local.md

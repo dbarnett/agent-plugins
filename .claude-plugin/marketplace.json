@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "dbarnett-agent-plugins",
+  "description": "dbarnett's personal Claude Code / Cursor plugin marketplace — jj/git branch-workflow tooling.",
+  "owner": {
+    "name": "David Barnett",
+    "url": "https://github.com/dbarnett"
+  },
+  "plugins": [
+    {
+      "name": "branch-workflow",
+      "description": "agents-tool: sets up AGENTS.md/AGENTS.local.md/CLAUDE.md for agent-friendly projects and scaffolds WIP: scope/TODO tracking directly in jj change descriptions (or git COMMIT_EDITMSG).",
+      "source": "./plugins/branch-workflow",
+      "category": "productivity"
+    }
+  ]
+}
