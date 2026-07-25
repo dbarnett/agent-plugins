@@ -6,6 +6,8 @@ dbarnett's personal Claude Code / Cursor plugin marketplace.
 
 - **[branch-workflow](plugins/branch-workflow/)** — want `agents-tool` (AGENTS.md setup +
   jj/git WIP scope-tracking) available as a plugin instead of a dotfiles script? Install this.
+- **[antipatterns](plugins/antipatterns/)** — want an agent to recognize David's shorthand
+  antipattern nicknames (SNAiTF, PPP, ...) without re-explaining them? Install this.
 
 ## Install
 

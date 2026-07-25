@@ -18,15 +18,15 @@ See README.md for what this repo is and how it's installed. See each plugin's
 
 ## Plugin quality standards
 
-- **Lean and portable.** A skill/plugin should carry exactly what's needed for the
-  situations it targets, no more — bloated SKILL.md content and bundled scripts cost
-  context on every session that loads them, whether or not that content is relevant right
-  now. Prefer linking to a fuller doc over inlining it (see `antipatterns` SKILL.md's own
-  "keep entries short, link don't restate" rule for an example).
-- **No cross-tool leakage.** Don't assume Claude-specific mechanisms (skill-triggering
-  behavior, `${CLAUDE_PLUGIN_ROOT}`, hooks, MCP config) work identically in Cursor, or vice
-  versa. If a plugin does something tool-specific, say so explicitly and guard for it,
-  rather than writing instructions that silently only work on one side.
+- **Lean.** A skill/plugin should carry exactly what's needed for the situations it
+  targets, no more — bloated SKILL.md content and bundled scripts cost context on every
+  session that loads them, whether or not that content is relevant right now. Prefer
+  linking to a fuller doc over inlining it (see `antipatterns` SKILL.md's own "keep
+  entries short, link don't restate" rule for an example).
+- **Portable.** Don't assume Claude-specific mechanisms (skill-triggering behavior,
+  `${CLAUDE_PLUGIN_ROOT}`, hooks, MCP config) work identically in Cursor, or vice versa.
+  If a plugin does something tool-specific, say so explicitly and guard for it, rather
+  than writing instructions that silently only work on one side.
 
 ## Security — before any push
 

@@ -1,0 +1,8 @@
+{
+  "name": "antipatterns",
+  "description": "David's shorthand vocabulary for recurring antipatterns (SNAiTF, PPP, ...) so any agent recognizes the terms without re-explaining.",
+  "author": {
+    "name": "David Barnett",
+    "url": "https://github.com/dbarnett"
+  }
+}
