@@ -1,0 +1,53 @@
+name: Plugin token cost
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Report projected token cost for changed plugins
+        run: |
+          set -eu
+
+          before="${{ github.event.before }}"
+          if [ "$before" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$before" 2>/dev/null; then
+            # First push to this branch, or unreachable base -- check every plugin.
+            changed_dirs=$(find plugins -mindepth 1 -maxdepth 1 -type d)
+          else
+            changed_dirs=$(git diff --name-only "$before" "${{ github.sha }}" -- plugins \
+              | awk -F/ 'NF>=2 {print "plugins/"$2}' | sort -u)
+          fi
+
+          if [ -z "$changed_dirs" ]; then
+            echo "No plugin changes in this push." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          {
+            echo "## Plugin token cost"
+            for dir in $changed_dirs; do
+              name=$(basename "$dir")
+              echo ""
+              echo "### $name"
+              echo '```'
+              claude --plugin-dir="$dir" plugin details "$name"
+              echo '```'
+            done
+          } >> "$GITHUB_STEP_SUMMARY"

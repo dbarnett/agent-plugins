@@ -30,6 +30,8 @@ local linters = new Mapping<String, Step> {
         glob = "**/*.json"
         check = "jq empty {{ files }}"
     }
+
+    ["actionlint"] = Builtins.actionlint
 }
 
 hooks {
