@@ -28,6 +28,23 @@ See README.md for what this repo is and how it's installed. See each plugin's
   If a plugin does something tool-specific, say so explicitly and guard for it, rather
   than writing instructions that silently only work on one side.
 
+## Testing changes in development
+
+- `hk check` (and `jj-hp run` if using jj-hooks) validate lint/shellcheck/JSON/secrets
+  before finalizing a change — cheap, run them often.
+- Newly installed/updated/enabled/disabled plugins do **not** hot-reload into an
+  already-running Claude Code session or into subagents spawned from it — they still see
+  whatever skill list was loaded at session start. Testing organic skill-triggering (does
+  a skill's description actually get picked up for the right prompts?) needs a genuinely
+  fresh process: `claude -p "<prompt>"` in a new subprocess, not an in-session subagent.
+  Confirmed the hard way: an in-session subagent test silently missed a skill entirely
+  (zero tool calls) right after install; a fresh `claude -p` picked it up correctly.
+- For fast local iteration without the remote-marketplace round-trip (push, wait, update,
+  reinstall), register a second, distinctly-named marketplace pointing at your working
+  tree (symlink a `plugins/` dir into it so relative `source` paths resolve) and toggle
+  between it and the real one with `claude plugin enable`/`disable` — avoids the
+  remove/re-add churn of switching a single marketplace's source back and forth.
+
 ## Security — before any push
 
 This repo is public. Anything migrated in from private sources (dotfiles, other repos) MUST be
