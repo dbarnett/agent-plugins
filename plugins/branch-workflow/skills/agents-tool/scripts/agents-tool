@@ -46,7 +46,7 @@ ${BOLD}What it does:${RESET}
   • With --task: Reviews current task context, scaffolds/validates WIP description
 
 ${BOLD}For more info:${RESET}
-  See ~/.agents/agents-files-howto.md for detailed documentation
+  See this skill's SKILL.md (and references/ for GitHub issue tracking specifics)
 "
             exit 0
             ;;
@@ -241,7 +241,7 @@ run_project_mode() {
 **⚠️ TODO: AGENTS MUST ASK USER - Should we track GitHub issues for this project?**
 
 **If YES:**
-- See \`~/.agents/agents-files-howto.md\` section "GitHub Issue Tracking" for commands
+- See the \`agents-tool\` skill's \`references/github-issues.md\` for commands
 - Structure with inline expiry: "Next refresh: YYYY-MM-DD (update weekly, +7d from fetch)"
 - File length convention: Keep under ~20 issues, extract to .agents/issues/ if growing
 

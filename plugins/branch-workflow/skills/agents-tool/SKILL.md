@@ -39,6 +39,9 @@ reflects what you're doing.
 ## What project mode does
 
 - Creates `AGENTS.local.md` (gitignored, machine/session-specific notes) if missing.
+  Includes a scaffolded "GitHub Issues" section — see
+  `references/github-issues.md` for the actual tracking/caching commands when you're
+  setting that up (not auto-loaded, read it when relevant).
 - Symlinks `CLAUDE.md` → `AGENTS.md`, and `AGENTS.md` → `AGENTS.local.md` by default
   (private pattern) unless a shared `AGENTS.md` already exists.
 - Adds the right entries to `.git/info/exclude` (or the jj-colocated equivalent).
