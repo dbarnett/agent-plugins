@@ -19,9 +19,9 @@
       "category": "productivity"
     },
     {
-      "name": "jj-workflow",
+      "name": "jj-vcs",
       "description": "Jujutsu (jj) version control: git-vs-jj mapping, workflow, selective squash/split, conflict resolution.",
-      "source": "./plugins/jj-workflow",
+      "source": "./plugins/jj-vcs",
       "category": "productivity"
     }
   ]

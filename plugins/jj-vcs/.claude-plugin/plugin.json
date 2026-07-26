@@ -1,5 +1,5 @@
 {
-  "name": "jj-workflow",
+  "name": "jj-vcs",
   "description": "Jujutsu (jj) version control: what it is, git-vs-jj command mapping, everyday workflow, selective squash/split, and conflict resolution.",
   "author": {
     "name": "David Barnett",

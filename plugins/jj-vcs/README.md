@@ -1,8 +1,8 @@
-# jj-workflow
+# jj-vcs
 
 Jujutsu (jj) version control skill: what it is, git-vs-jj command mapping, everyday
 workflow, selective squash/split, and conflict resolution. See
-[`skills/jj-workflow/SKILL.md`](skills/jj-workflow/SKILL.md) for the actual skill content.
+[`skills/jj-vcs/SKILL.md`](skills/jj-vcs/SKILL.md) for the actual skill content.
 
 ## Why build this instead of using an existing skill
 

@@ -1,5 +1,5 @@
 ---
-name: jj-workflow
+name: jj-vcs
 description: >
   Jujutsu (jj) version control: what it is, how it differs from git, everyday commands,
   selective squash/split, and conflict resolution. Use when working in a repo with a
@@ -7,7 +7,7 @@ description: >
   asked "what is jj" / "how do I do X in jj vs git".
 ---
 
-# jj-workflow
+# jj-vcs
 
 ## What is jj?
 
