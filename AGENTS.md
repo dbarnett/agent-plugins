@@ -11,8 +11,11 @@ See README.md for what this repo is and how it's installed. See each plugin's
 - Root needs both `.claude-plugin/marketplace.json` and `.cursor-plugin/marketplace.json`,
   listing the same plugins.
 - Each plugin dir needs its own `.claude-plugin/plugin.json` and `.cursor-plugin/plugin.json`.
-- Bundled scripts are referenced via `${CLAUDE_PLUGIN_ROOT}` (Claude) / `$CURSOR_PLUGIN_ROOT`
-  (Cursor) — never hardcoded paths.
+- Bundled scripts are referenced via `${CLAUDE_PLUGIN_ROOT}` on Claude — never hardcoded
+  paths. Cursor has no equivalent root env var (verified against the official
+  cursor/plugins spec repo, 2026-07-25); reference bundled scripts there by a path
+  relative to the SKILL.md's own directory instead (see `cursor/plugins`' own
+  `pstack/skills/show-me-your-work` for the precedent).
 - Keep the root README.md to a one-line-per-plugin index; detailed usage belongs in each
   plugin's `skills/*/SKILL.md`, not duplicated at the top level.
 

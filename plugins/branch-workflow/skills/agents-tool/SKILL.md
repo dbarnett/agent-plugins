@@ -21,17 +21,16 @@ tracked file — there is no `THIS_BRANCH.md`-style file to create or clean up.
 
 ## Running it
 
-The script lives in `scripts/agents-tool` next to this SKILL.md.
-
 ```
-# In Claude
-"${CLAUDE_PLUGIN_ROOT}/skills/agents-tool/scripts/agents-tool"
-# In Cursor
-"${CURSOR_PLUGIN_ROOT}/skills/agents-tool/scripts/agents-tool"
-
-.../scripts/agents-tool"          # project mode: check/setup AGENTS files
-.../scripts/agents-tool" --task   # also scaffold/review WIP scope in the change description
+<skill-dir>/scripts/agents-tool          # project mode: check/setup AGENTS files
+<skill-dir>/scripts/agents-tool --task   # also scaffold/review WIP scope
 ```
+
+`<skill-dir>` is this SKILL.md's own directory:
+
+- **Claude:** `"${CLAUDE_PLUGIN_ROOT}/skills/agents-tool"`
+- **Cursor:** no equivalent root env var — use the directory this SKILL.md file is in
+  (its path is in your context).
 
 Idempotent — safe to run repeatedly. Run project mode routinely; run `--task` when
 starting a new branch/change or when unsure if the current change's description still
