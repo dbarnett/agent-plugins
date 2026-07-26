@@ -17,6 +17,12 @@
       "description": "Glossary of David's shorthand antipattern nicknames (SNAiTF, PPP, ...).",
       "source": "./plugins/antipatterns",
       "category": "productivity"
+    },
+    {
+      "name": "jj-workflow",
+      "description": "Jujutsu (jj) version control: git-vs-jj mapping, workflow, selective squash/split, conflict resolution.",
+      "source": "./plugins/jj-workflow",
+      "category": "productivity"
     }
   ]
 }

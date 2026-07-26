@@ -18,6 +18,10 @@ See README.md for what this repo is and how it's installed. See each plugin's
   `pstack/skills/show-me-your-work` for the precedent).
 - Keep the root README.md to a one-line-per-plugin index; detailed usage belongs in each
   plugin's `skills/*/SKILL.md`, not duplicated at the top level.
+- Each plugin gets its own `README.md` too (standard practice, matches `cursor/plugins`)
+  for human-facing notes that don't belong in SKILL.md: alternatives surveyed, rationale,
+  roadmap. SKILL.md is agent-facing and loaded into context on every trigger (see "Lean"
+  below); README.md isn't loaded at all.
 
 ## Plugin quality standards
 

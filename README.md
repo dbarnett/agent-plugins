@@ -8,6 +8,9 @@ dbarnett's personal Claude Code / Cursor plugin marketplace.
   jj/git WIP scope-tracking) available as a plugin instead of a dotfiles script? Install this.
 - **[antipatterns](plugins/antipatterns/)** — want an agent to recognize David's shorthand
   antipattern nicknames (SNAiTF, PPP, ...) without re-explaining them? Install this.
+- **[jj-workflow](plugins/jj-workflow/)** — want an agent to know Jujutsu (jj) version
+  control: git-vs-jj mapping, workflow, selective squash/split, conflict resolution?
+  Install this.
 
 ## Install
 
