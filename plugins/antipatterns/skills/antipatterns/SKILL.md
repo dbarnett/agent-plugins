@@ -13,7 +13,7 @@ on any system and be understood without re-explaining.
 
 ## SNAiTF
 
-"Sir, not appearing in this film." A commit/change description (or doc) mentioning
+Sir Not-Appearing-in-This-Film. A commit/change description (or doc) mentioning
 something that was never actually part of the change/repo — no reason a reader would
 expect it there. E.g. a fresh scaffold's description saying "not yet migrated: X" when X
 was never part of this repo to begin with.
