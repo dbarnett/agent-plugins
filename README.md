@@ -23,8 +23,8 @@ you also want to adopt those conventions:
 ## Install
 
 ```
-claude plugin marketplace add dbarnett/agent-plugins
-claude plugin install <plugin-name>@dbarnett-agent-plugins
+claude plugin marketplace add mu-mind/agent-plugins
+claude plugin install <plugin-name>@mu-mind-agent-plugins
 ```
 
 Cursor: same repo, reads `.cursor-plugin/marketplace.json` instead. See per-plugin READMEs/SKILL.md for details.

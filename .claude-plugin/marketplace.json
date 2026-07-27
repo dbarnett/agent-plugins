@@ -1,10 +1,10 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "dbarnett-agent-plugins",
+  "name": "mu-mind-agent-plugins",
   "description": "dbarnett's personal Claude Code / Cursor plugin marketplace.",
   "owner": {
     "name": "David Barnett",
-    "url": "https://github.com/dbarnett"
+    "url": "https://github.com/mu-mind"
   },
   "plugins": [
     {
