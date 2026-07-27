@@ -1,0 +1,8 @@
+{
+  "name": "test-standards",
+  "description": "Language-agnostic test-quality principles (avoid overmocking, avoid expect-expect-expect field splitting) plus a mechanism for drafting project-local, language-concrete testing conventions.",
+  "author": {
+    "name": "David Barnett",
+    "url": "https://github.com/dbarnett"
+  }
+}

@@ -8,6 +8,8 @@ General-purpose:
 
 - **[jj-vcs](plugins/jj-vcs/)** — want an agent to know Jujutsu (jj) version control:
   git-vs-jj mapping, workflow, selective squash/split, conflict resolution? Install this.
+- **[test-standards](plugins/test-standards/)** — want an agent to stop overmocking and
+  splitting one assertion into an expect-expect-expect chain? Install this.
 
 The rest are personal/opinionated, tied to David's specific conventions (WIP-prefixed
 change descriptions, his own shorthand vocabulary) — not a general recommendation unless

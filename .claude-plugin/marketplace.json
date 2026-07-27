@@ -24,6 +24,12 @@
       "description": "Jujutsu (jj) version control: git-vs-jj mapping, workflow, selective squash/split, conflict resolution.",
       "source": "./plugins/jj-vcs",
       "category": "productivity"
+    },
+    {
+      "name": "test-standards",
+      "description": "Test-quality principles (avoid overmocking, avoid expect-expect-expect) plus drafting project-local concrete conventions.",
+      "source": "./plugins/test-standards",
+      "category": "productivity"
     }
   ]
 }
