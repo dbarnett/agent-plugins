@@ -58,6 +58,8 @@ other languages, etc).
 For deterministic-but-complex output, prefer inline/golden snapshots over hand-coding
 the expected string.
 
+See also: ["Testing on the Toilet: Keep Cause and Effect Clear"](https://testing.googleblog.com/2017/01/testing-on-toilet-keep-cause-and-effect.html).
+
 ## Avoid overmocking
 
 **Test real behavior, not mocks.**
@@ -72,7 +74,11 @@ the expected string.
 - Test-double taxonomy, use the right one: **stub** (canned responses), **fake**
   (working shortcut implementation, e.g. in-memory DB), **spy** (records calls for
   verification), **mock** (pre-programmed expectations + verifies them), **dummy**
-  (passed but never used).
+  (passed but never used). Full taxonomy and tradeoffs:
+  [Software Engineering at Google, ch. 13 "Test Doubles"](https://abseil.io/resources/swe-book/html/ch13.html).
+
+See also: ["Increase Test Fidelity By Avoiding Mocks"](https://testing.googleblog.com/2024/02/increase-test-fidelity-by-avoiding-mocks.html)
+(Google Testing Blog).
 
 ## Making this concrete per project
 
@@ -97,3 +103,11 @@ language/framework.
 
 Shared/team projects get this in the committed `AGENTS.md` so every contributor's agent
 benefits, not just the one session that happened to write it.
+
+## Further reading
+
+- [Software Engineering at Google, ch. 13 "Test Doubles"](https://abseil.io/resources/swe-book/html/ch13.html)
+- ["Increase Test Fidelity By Avoiding Mocks"](https://testing.googleblog.com/2024/02/increase-test-fidelity-by-avoiding-mocks.html) (Google Testing Blog)
+- ["Testing on the Toilet: Keep Cause and Effect Clear"](https://testing.googleblog.com/2017/01/testing-on-toilet-keep-cause-and-effect.html)
+- ["Unit Test Attributes"](https://jhumelsine.github.io/2024/06/14/unit-test-attributes.html)
+  — precision, fidelity, robustness, and other properties of a good test

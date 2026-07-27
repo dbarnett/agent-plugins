@@ -3,7 +3,9 @@
 Language-agnostic test-quality principles plus a mechanism for drafting project-local,
 language-concrete testing conventions. See
 [`skills/test-standards/SKILL.md`](skills/test-standards/SKILL.md) for the actual skill
-content.
+content, including a "Further reading" section linking the primary sources (Software
+Engineering at Google's Test Doubles chapter, Google Testing Blog, etc) these principles
+are grounded in.
 
 ## Why build this instead of using an existing skill
 
