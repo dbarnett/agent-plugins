@@ -99,6 +99,24 @@ show_task_mode_suggestion() {
 "
 }
 
+# Helper: Infer an agent:<tool>:<id> line for WIP descriptions, so a change records
+# which agent session owns it (avoid other sessions editing it blind). Checks an
+# explicit override first, then known per-tool env vars. Prints empty string (not an
+# error) when nothing is detected -- callers decide whether to prompt or skip.
+detect_agent_id() {
+    if [ -n "${AGENTS_TOOL_AGENT_ID:-}" ]; then
+        printf "%s" "$AGENTS_TOOL_AGENT_ID"
+        return
+    fi
+    # Claude Code CLI: CLAUDE_CODE_SESSION_ID is a fixed UUID for the life of the
+    # session (confirmed via env, matches the session's own tmp scratch dir name).
+    if [ "${CLAUDECODE:-}" = "1" ] && [ -n "${CLAUDE_CODE_SESSION_ID:-}" ]; then
+        printf "cc:%s" "$CLAUDE_CODE_SESSION_ID"
+        return
+    fi
+    printf ""
+}
+
 # Helper: Calculate date N days in future
 date_plus_days() {
     if result=$(date -d "+$1 days" '+%Y-%m-%d' 2>/dev/null); then
@@ -114,6 +132,62 @@ date_plus_days() {
 # Get today and refresh dates
 TODAY=$(date '+%Y-%m-%d')
 REFRESH_BY=$(date_plus_days "$REFRESH_DAYS")
+
+# Detect this agent session's ID once, used to tag new WIP descriptions and to spot
+# when an existing WIP change belongs to a different session (see AGENT_ID checks below).
+AGENT_ID=$(detect_agent_id)
+# Format is "agent:tool:id" optionally followed by a quoted name: id and name are
+# separate fields (id is what gets matched for ownership; name is just for humans to
+# eyeball). Name is unknown for now (no auto-detection source yet) unless overridden.
+AGENT_NAME="${AGENTS_TOOL_AGENT_NAME:-}"
+if [ -n "$AGENT_ID" ]; then
+    AGENT_LINE="agent:$AGENT_ID"
+    if [ -n "$AGENT_NAME" ]; then
+        AGENT_LINE="$AGENT_LINE \"$AGENT_NAME\""
+    fi
+fi
+# When AGENT_ID can't be inferred, AGENT_LINE stays empty -- callers that are about to
+# scaffold a *new* WIP description must call require_agent_id first (prints an error and
+# returns false) rather than silently writing a TODO placeholder into real state.
+require_agent_id() {
+    if [ -n "$AGENT_ID" ]; then
+        return 0
+    fi
+    printf "${RED}${BOLD}🤖 AGENTS: Missing agent ID -- can't scaffold WIP description.${RESET}
+   Set ${GREEN}AGENTS_TOOL_AGENT_ID=tool:id${RESET} (optionally ${GREEN}AGENTS_TOOL_AGENT_NAME=name${RESET}), then rerun.
+   Examples:
+     AGENTS_TOOL_AGENT_ID='cc:d3adb33f' AGENTS_TOOL_AGENT_NAME='Test agent identification in WIP change descriptions'
+     AGENTS_TOOL_AGENT_ID='oc:?' AGENTS_TOOL_AGENT_NAME='Some name'   (id unknown -- placeholder \"?\", name still useful)
+   Or explicitly opt out: ${GREEN}AGENTS_TOOL_AGENT_ID=none${RESET}
+
+"
+    return 1
+}
+
+# Helper: Compare a WIP description's agent: line(s) against this session's AGENT_ID,
+# and warn loudly if this session isn't among them -- that's the case this whole
+# convention exists for (another session's in-progress change, don't edit blind).
+# Multiple agent: lines are valid (several sessions deliberately sharing one change) --
+# a match on any one of them is enough to consider this session an owner. Matching is on
+# the id field only (first token after "agent:"), a trailing quoted name is ignored.
+check_agent_ownership() {
+    local desc="$1"
+    local existing_lines
+    existing_lines=$(printf "%s\n" "$desc" | grep '^agent:' | sed 's/^agent://' | awk '{print $1}' | grep -v '^none$' || true)
+    if [ -z "$existing_lines" ] || [ -z "$AGENT_ID" ]; then
+        return
+    fi
+    if ! printf "%s\n" "$existing_lines" | grep -qxF "$AGENT_ID"; then
+        printf "${RED}${BOLD}⚠️  This WIP change is tagged for other agent session(s), not this one:${RESET}
+   Change:       ${YELLOW}%s${RESET}
+   This session: ${YELLOW}%s${RESET}
+   Avoid directly editing -- run ${GREEN}jj new${RESET} (or ${GREEN}git${RESET} equivalent) to branch off,
+   or confirm with the user you're intentionally taking this over (you can add your own
+   ${GREEN}agent:%s${RESET} line alongside the existing one(s) if deliberately collaborating).
+
+" "$(printf "%s" "$existing_lines" | paste -sd, -)" "$AGENT_ID" "$AGENT_ID"
+    fi
+}
 
 printf "${BOLD}🔧 Checking for AGENTS files${RESET}\n\n"
 
@@ -551,6 +625,7 @@ run_task_mode() {
         fi
 
         CURRENT_DESC=$(jj log -r @ --no-graph -T 'description' 2>/dev/null || echo "")
+        check_agent_ownership "$CURRENT_DESC"
 
         if [ -z "$CURRENT_DESC" ]; then
             printf "${BOLD}🤖 AGENTS:${RESET} ${RED}You MUST add a description to the current change!${RESET}\n\n"
@@ -669,8 +744,10 @@ This signals intentional new work and will create branch metadata files.
     if command -v jj >/dev/null 2>&1; then
         CURRENT_DESC=$(jj log -r @ --no-graph -T 'description' 2>/dev/null || echo "")
         CURRENT_FIRST=$(jj log -r @ --no-graph -T 'description.first_line()' 2>/dev/null || echo "")
+        check_agent_ownership "$CURRENT_DESC"
 
         if [ -z "$CURRENT_DESC" ]; then
+            require_agent_id || return
             PARENT_DESC=$(jj log -r @- --no-graph -T 'description' 2>/dev/null || echo "")
             PARENT_HAS_WIP=false
             if echo "$PARENT_DESC" | grep -q "^## Scope"; then
@@ -681,6 +758,8 @@ This signals intentional new work and will create branch metadata files.
                 printf "${BOLD}⚡ ACTION:${RESET} ${YELLOW}Parent change has WIP scope/TODOs but this child has no description.${RESET}\n"
                 printf "   Propagate relevant scope, or describe what's different: ${GREEN}jj describe${RESET}\n\n"
                 DESC_TEMPLATE="WIP: TODO - what's new/different in this change?
+
+$AGENT_LINE
 
 ## Scope
 (Same as parent, or describe what's specific to this child change.)
@@ -699,6 +778,8 @@ This signals intentional new work and will create branch metadata files.
 🔚 WIP EXIT: Same as parent — move useful notes out, collapse to 2-5 lines."
             else
                 DESC_TEMPLATE="WIP: TODO - what does this change accomplish?
+
+$AGENT_LINE
 
 ## Scope
 (What's changing: which files, features, or behaviors. Helps reviewers focus.)
@@ -777,8 +858,10 @@ This signals intentional new work and will create branch metadata files.
     elif [ -d .git ]; then
         CURRENT_DESC=$(read_editmsg)
         CURRENT_FIRST=$(printf "%s" "$CURRENT_DESC" | head -1)
+        check_agent_ownership "$CURRENT_DESC"
 
         if [ -z "$CURRENT_DESC" ]; then
+            require_agent_id || return
             PARENT_DESC=$(git log -1 --format=%B HEAD 2>/dev/null || echo "")
             PARENT_HAS_WIP=false
             if echo "$PARENT_DESC" | grep -q "^## Scope"; then
@@ -788,6 +871,8 @@ This signals intentional new work and will create branch metadata files.
             if [ "$PARENT_HAS_WIP" = true ]; then
                 printf "${BOLD}⚡ ACTION:${RESET} ${YELLOW}HEAD commit has WIP scope/TODOs — propagate relevant scope, or describe what's different.${RESET}\n\n"
                 DESC_TEMPLATE="WIP: TODO - what's new/different in this commit?
+
+$AGENT_LINE
 
 ## Scope
 (Same as HEAD, or describe what's specific to this commit.)
@@ -806,6 +891,8 @@ This signals intentional new work and will create branch metadata files.
 🔚 WIP EXIT: Same as HEAD — move useful notes out, collapse to 2-5 lines."
             else
                 DESC_TEMPLATE="WIP: TODO - what does this commit accomplish?
+
+$AGENT_LINE
 
 ## Scope
 (What's changing: which files, features, or behaviors. Helps reviewers focus.)
