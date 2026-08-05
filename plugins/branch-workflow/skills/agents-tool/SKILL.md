@@ -26,6 +26,11 @@ tracked file — there is no `THIS_BRANCH.md`-style file to create or clean up.
 <skill-dir>/scripts/agents-tool --task   # also scaffold/review WIP scope
 ```
 
+For date-gated refresh of `AGENTS.local.md` content itself (not just file
+existence/symlinks) and `.agents/ISSUE_CACHE.md`, use the `/freshen-agents-local-files`
+command instead — it respects `**Refresh By:**` dates unless told to force, and can be
+told (via free-text args, like `/compact`) to focus on GitHub issues only.
+
 `<skill-dir>` is this SKILL.md's own directory:
 
 - **Claude:** `"${CLAUDE_PLUGIN_ROOT}/skills/agents-tool"`

@@ -1,6 +1,6 @@
 {
   "name": "branch-workflow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "agents-tool: sets up AGENTS.md/AGENTS.local.md/CLAUDE.md for agent-friendly projects and scaffolds WIP: scope/TODO tracking directly in jj change descriptions (or git COMMIT_EDITMSG).",
   "author": {
     "name": "David Barnett",
