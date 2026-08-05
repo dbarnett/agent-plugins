@@ -1,11 +1,15 @@
 ---
 name: test-standards
 description: >
-  Language-agnostic test-quality principles: avoid overmocking, avoid splitting one
-  logical assertion into multiple expect calls (expect-expect-expect), one test = one
-  thing, and scope-documenting comments per test file. Use when writing, reviewing, or
-  debugging tests, or when a test file's purpose/scope relative to sibling test files
-  isn't already documented.
+  TRIGGER — load this skill FIRST, before writing the first assertion or touching a
+  test file: whenever the user says "write/add/fix/debug a test" (or equivalent) in any
+  form; before any Edit/Write to a file matching `*.test.*`, `*_test.*`, `*.spec.*`,
+  `test_*.py`, or similar test-file naming; before reviewing a diff/PR that touches test
+  files. Don't skip because the test looks trivial, one-off, or like a "just add one
+  assertion" task — that's exactly when overmocking and expect-expect-expect creep in
+  unnoticed. Covers: avoid overmocking, avoid splitting one logical assertion into
+  multiple expect calls (expect-expect-expect), one test = one thing, and
+  scope-documenting comments distinguishing sibling test files.
 ---
 
 # test-standards
